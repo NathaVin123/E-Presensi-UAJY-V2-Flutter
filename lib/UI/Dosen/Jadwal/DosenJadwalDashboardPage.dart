@@ -29,6 +29,8 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
   JadwalDosenRequestModel jadwalDosenRequestModel;
 
   JadwalDosenResponseModel jadwalDosenResponseModel;
+
+  List<Data> jadwalDosenListSearch = List<Data>();
   @override
   void initState() {
     super.initState();
@@ -57,7 +59,7 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
     });
   }
 
-  void getDataJadwalDosen() async {
+  getDataJadwalDosen() async {
     // setState(() {
     jadwalDosenRequestModel.npp = npp;
 
@@ -65,7 +67,11 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
     APIService apiService = new APIService();
     apiService.postJadwalDosen(jadwalDosenRequestModel).then((value) async {
       jadwalDosenResponseModel = value;
+
+      jadwalDosenListSearch = value.data;
     });
+
+    return jadwalDosenListSearch;
     // });
   }
 
@@ -171,6 +177,47 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
       ),
       body: Column(
         children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                    color: Colors.grey[500],
+                    offset: Offset(0.0, 0.0),
+                    blurRadius: 0.75,
+                    spreadRadius: 0.25)
+              ], color: Colors.white, borderRadius: BorderRadius.circular(25)),
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.search),
+                    iconColor: Colors.black,
+                    hintText: 'Cari Mata Kuliah',
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                  ),
+                  style: const TextStyle(
+                      fontFamily: 'OpenSans',
+                      fontSize: 16.0,
+                      color: Colors.black),
+                  onChanged: (text) {
+                    text = text.toLowerCase();
+                    setState(() {
+                      jadwalDosenListSearch =
+                          jadwalDosenResponseModel.data.where((jadwal) {
+                        var namamatkul = jadwal.namamk.toLowerCase();
+                        return namamatkul.contains(text);
+                      }).toList();
+                    });
+                  },
+                ),
+              ),
+            ),
+          ),
           // Center(
           //   child: Column(
           //     children: <Widget>[
@@ -285,7 +332,7 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
                   : Expanded(
                       child: Scrollbar(
                         child: ListView.builder(
-                            itemCount: jadwalDosenResponseModel.data?.length,
+                            itemCount: jadwalDosenListSearch.length,
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.only(
@@ -309,7 +356,7 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
                                           child: Padding(
                                             padding: const EdgeInsets.all(4.0),
                                             child: Text(
-                                              '${jadwalDosenResponseModel.data[index].hari1}, ${jadwalDosenResponseModel.data[index].tglmasuk}',
+                                              '${jadwalDosenListSearch[index].hari1}, ${jadwalDosenListSearch[index].tglmasuk}',
                                               style: TextStyle(
                                                 color: Colors.blue[500],
                                                 fontSize: 16,
@@ -334,7 +381,7 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
                                                               const EdgeInsets
                                                                   .all(4.0),
                                                           child: new Text(
-                                                            '${jadwalDosenResponseModel.data[index].namamk} ${jadwalDosenResponseModel.data[index].kelas}',
+                                                            '${jadwalDosenListSearch[index].namamk} ${jadwalDosenListSearch[index].kelas}',
                                                             style: TextStyle(
                                                                 fontSize: 18,
                                                                 fontFamily:
@@ -355,7 +402,7 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
                                         Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: Text(
-                                            'Pertemuan ke - ${jadwalDosenResponseModel.data[index].pertemuan}',
+                                            'Pertemuan ke - ${jadwalDosenListSearch[index].pertemuan}',
                                             style: TextStyle(
                                               color: Colors.grey[600],
                                               fontSize: 14,
@@ -367,7 +414,7 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
                                         Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: Text(
-                                            'Jumlah mahasiswa : ${jadwalDosenResponseModel.data[index].total}' ??
+                                            'Jumlah mahasiswa : ${jadwalDosenListSearch[index].total}' ??
                                                 '-',
                                             style: TextStyle(
                                               color: Colors.grey[600],
@@ -377,11 +424,10 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
                                             ),
                                           ),
                                         ),
-                                        jadwalDosenResponseModel.data[index]
+                                        jadwalDosenListSearch[index]
                                                         .cekjammasuk ==
                                                     null ||
-                                                jadwalDosenResponseModel
-                                                    .data[index]
+                                                jadwalDosenListSearch[index]
                                                     .cekjammasuk
                                                     .isEmpty
                                             ? Padding(
@@ -427,7 +473,7 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
                                                   padding:
                                                       const EdgeInsets.all(4.0),
                                                   child: Text(
-                                                    'Sesi ${jadwalDosenResponseModel.data[index].sesi1}',
+                                                    'Sesi ${jadwalDosenListSearch[index].sesi1}',
                                                     style: TextStyle(
                                                       color: Colors.black,
                                                       fontSize: 14,
@@ -441,7 +487,7 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
                                                   padding:
                                                       const EdgeInsets.all(4.0),
                                                   child: Text(
-                                                    'Ruang ${jadwalDosenResponseModel.data[index].ruang}',
+                                                    'Ruang ${jadwalDosenListSearch[index].ruang}',
                                                     style: TextStyle(
                                                         fontFamily: 'OpenSans',
                                                         color: Colors.black,
@@ -454,7 +500,7 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
                                                   padding:
                                                       const EdgeInsets.all(4.0),
                                                   child: Text(
-                                                    '${jadwalDosenResponseModel.data[index].sks} SKS',
+                                                    '${jadwalDosenListSearch[index].sks} SKS',
                                                     style: TextStyle(
                                                         color: Colors.black,
                                                         fontFamily: 'OpenSans',
@@ -469,7 +515,7 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
                                               padding:
                                                   const EdgeInsets.all(4.0),
                                               child: Text(
-                                                '${jadwalDosenResponseModel.data[index].jammasuk} - ${jadwalDosenResponseModel.data[index].jamkeluar}',
+                                                '${jadwalDosenListSearch[index].jammasuk} - ${jadwalDosenListSearch[index].jamkeluar}',
                                                 style: TextStyle(
                                                     fontFamily: 'OpenSans',
                                                     fontWeight: FontWeight.bold,
@@ -480,7 +526,7 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
                                             //   padding:
                                             //       const EdgeInsets.all(4.0),
                                             //   child: Text(
-                                            //     '${jadwalDosenResponseModel.data[index].cekjammasuk ?? '-'}',
+                                            //     '${jadwalDosenListSearch.data[index].cekjammasuk ?? '-'}',
                                             //     style: TextStyle(
                                             //         fontFamily: 'OpenSans',
                                             //         fontWeight: FontWeight.bold,
@@ -531,52 +577,51 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
 
                                               await dataPresensiDosen.setInt(
                                                   'idkelas',
-                                                  jadwalDosenResponseModel
-                                                      .data[index].idkelas);
+                                                  jadwalDosenListSearch[index]
+                                                      .idkelas);
 
                                               await dataPresensiDosen.setString(
                                                   'dosen',
-                                                  jadwalDosenResponseModel
-                                                      .data[index].namadosen1);
+                                                  jadwalDosenListSearch[index]
+                                                      .namadosen1);
 
                                               await dataPresensiDosen.setString(
                                                   'npp',
-                                                  jadwalDosenResponseModel
-                                                      .data[index].nppdosen1);
+                                                  jadwalDosenListSearch[index]
+                                                      .nppdosen1);
 
                                               await dataPresensiDosen.setString(
                                                   'namamk',
-                                                  jadwalDosenResponseModel
-                                                      .data[index].namamk);
+                                                  jadwalDosenListSearch[index]
+                                                      .namamk);
 
                                               await dataPresensiDosen.setString(
                                                   'kelas',
-                                                  jadwalDosenResponseModel
-                                                      .data[index].kelas);
+                                                  jadwalDosenListSearch[index]
+                                                      .kelas);
 
                                               await dataPresensiDosen.setInt(
                                                   'pertemuan',
-                                                  jadwalDosenResponseModel
-                                                      .data[index].pertemuan);
+                                                  jadwalDosenListSearch[index]
+                                                      .pertemuan);
 
                                               await dataPresensiDosen.setInt(
                                                   'sks',
-                                                  jadwalDosenResponseModel
-                                                      .data[index].sks);
+                                                  jadwalDosenListSearch[index]
+                                                      .sks);
 
                                               await dataPresensiDosen.setString(
                                                   'sesi',
-                                                  jadwalDosenResponseModel
-                                                      .data[index].sesi1);
-                                              if (jadwalDosenResponseModel
-                                                      .data[index]
+                                                  jadwalDosenListSearch[index]
+                                                      .sesi1);
+                                              if (jadwalDosenListSearch[index]
                                                       .cekjammasuk !=
                                                   null) {
                                                 await dataPresensiDosen
                                                     .setString(
                                                         'cekjammasuk',
-                                                        jadwalDosenResponseModel
-                                                            .data[index]
+                                                        jadwalDosenListSearch[
+                                                                index]
                                                             .cekjammasuk);
                                               } else {
                                                 await dataPresensiDosen

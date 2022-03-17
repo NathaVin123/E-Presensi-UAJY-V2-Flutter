@@ -60,13 +60,14 @@ class _AdminHapusRuanganPageState extends State<AdminHapusRuanganPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        foregroundColor: Colors.black,
         elevation: 0,
         backgroundColor: Colors.blue[100],
         centerTitle: true,
         title: Text(
           'Hapus Perangkat Ruangan',
           style: TextStyle(
-              color: Colors.white,
+              color: Colors.black,
               fontFamily: 'OpenSans',
               fontWeight: FontWeight.bold),
         ),
@@ -121,7 +122,7 @@ class _AdminHapusRuanganPageState extends State<AdminHapusRuanganPage>
         child: Icon(Icons.refresh_rounded),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,
-      backgroundColor: Color.fromRGBO(23, 75, 137, 1),
+      backgroundColor: Colors.grey[50],
       body: listDetailRuanganResponseModel.data == null
           ? Container(
               child: Padding(
@@ -184,12 +185,21 @@ class _AdminHapusRuanganPageState extends State<AdminHapusRuanganPage>
                       padding: const EdgeInsets.all(4.0),
                       child: Container(
                         decoration: BoxDecoration(
-                            color: Colors.grey[200],
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey[500],
+                                  offset: Offset(0.0, 0.0),
+                                  blurRadius: 0.75,
+                                  spreadRadius: 0.25)
+                            ],
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(25)),
                         child: Padding(
                           padding: const EdgeInsets.all(4.0),
                           child: TextFormField(
                             decoration: InputDecoration(
+                              icon: Icon(Icons.search),
+                              iconColor: Colors.black,
                               hintText: 'Cari Ruangan',
                               border: InputBorder.none,
                               focusedBorder: InputBorder.none,
@@ -226,7 +236,14 @@ class _AdminHapusRuanganPageState extends State<AdminHapusRuanganPage>
                                   left: 12, right: 12, top: 8, bottom: 8),
                               child: Container(
                                 decoration: BoxDecoration(
-                                    color: Colors.grey[200],
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.grey[500],
+                                          offset: Offset(0.0, 0.0),
+                                          blurRadius: 0.75,
+                                          spreadRadius: 0.25)
+                                    ],
+                                    color: Colors.white,
                                     borderRadius: BorderRadius.circular(25)),
                                 child: new ListTile(
                                   title: Padding(
@@ -303,6 +320,7 @@ class _AdminHapusRuanganPageState extends State<AdminHapusRuanganPage>
                                             child: Text(
                                               "Hapus Perangkat",
                                               style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
                                                   fontFamily: 'OpenSans',
                                                   fontSize: 14.0,
                                                   color: Colors.white),

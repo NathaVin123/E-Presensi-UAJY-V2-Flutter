@@ -18,13 +18,13 @@ class _TentangPageState extends State<TentangPage> {
           elevation: 0,
           backgroundColor: Colors.grey[200],
           centerTitle: true,
-          // title: Text(
-          //   'Tentang Aplikasi',
-          //   style: TextStyle(
-          //       color: Colors.black,
-          //       fontFamily: 'OpenSans',
-          //       fontWeight: FontWeight.bold),
-          // ),
+          title: Text(
+            'Tentang Aplikasi',
+            style: TextStyle(
+                color: Colors.black,
+                fontFamily: 'OpenSans',
+                fontWeight: FontWeight.bold),
+          ),
         ),
         body: SingleChildScrollView(
           child: Padding(

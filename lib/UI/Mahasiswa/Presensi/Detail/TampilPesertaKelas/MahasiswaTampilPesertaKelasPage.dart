@@ -19,6 +19,8 @@ class _MahasiswaTampilPesertaKelasPageState
   TampilPesertaKelasRequestModel tampilPesertaKelasRequestModel;
   TampilPesertaKelasResponseModel tampilPesertaKelasResponseModel;
 
+  List<Data> tampilPesertaKelasListSearch = List<Data>();
+
   @override
   void initState() {
     super.initState();
@@ -62,8 +64,12 @@ class _MahasiswaTampilPesertaKelasPageState
           .postListPesertaKelas(tampilPesertaKelasRequestModel)
           .then((value) async {
         tampilPesertaKelasResponseModel = value;
+
+        tampilPesertaKelasListSearch = value.data;
       });
     });
+
+    return tampilPesertaKelasListSearch;
   }
 
   @override
@@ -98,124 +104,178 @@ class _MahasiswaTampilPesertaKelasPageState
           ),
           centerTitle: true,
         ),
-        body: tampilPesertaKelasResponseModel.data == null
-            ? Container(
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Center(
-                      child: Column(
-                    children: [
-                      CircularProgressIndicator(
-                        color: Colors.black,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey[500],
+                            offset: Offset(0.0, 0.0),
+                            blurRadius: 0.75,
+                            spreadRadius: 0.25)
+                      ],
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(25)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        icon: Icon(Icons.search),
+                        iconColor: Colors.black,
+                        hintText: 'Cari NPM Mahasiswa',
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        errorBorder: InputBorder.none,
+                        disabledBorder: InputBorder.none,
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text(
-                        'Mohon Tunggu',
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontFamily: 'OpenSans',
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  )),
+                      style: const TextStyle(
+                          fontFamily: 'OpenSans',
+                          fontSize: 16.0,
+                          color: Colors.black),
+                      onChanged: (text) {
+                        text = text.toLowerCase();
+                        setState(() {
+                          tampilPesertaKelasListSearch =
+                              tampilPesertaKelasResponseModel.data.where((npm) {
+                            var nonpm = npm.npm.toLowerCase();
+                            return nonpm.contains(text);
+                          }).toList();
+                        });
+                      },
+                    ),
+                  ),
                 ),
-              )
-            : tampilPesertaKelasResponseModel.data.isEmpty
-                ? Container(
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: Colors.red,
-                                  borderRadius: BorderRadius.circular(25)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  'Tidak ada data kehadiran',
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontFamily: 'OpenSans',
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                ),
-                              ),
+              ),
+              tampilPesertaKelasResponseModel.data == null
+                  ? Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Center(
+                            child: Column(
+                          children: [
+                            CircularProgressIndicator(
+                              color: Colors.black,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Text(
+                              'Mohon Tunggu',
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'OpenSans',
+                                  fontWeight: FontWeight.bold),
                             ),
                           ],
-                        ),
+                        )),
                       ),
-                    ),
-                  )
-                : Scrollbar(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Scrollbar(
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: DataTable(
-                                  onSelectAll: (b) {},
-                                  headingRowColor: MaterialStateProperty.all(
-                                      Colors.blue[200]),
-                                  columns: [
-                                    DataColumn(
-                                        label: Text(
-                                      'No',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: 'OpenSans',
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )),
-                                    DataColumn(
-                                        label: Text(
-                                      'NPM',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: 'OpenSans',
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )),
-                                    DataColumn(
-                                      label: Text(
-                                        'Nama Mahasiswa',
+                    )
+                  : tampilPesertaKelasResponseModel.data.isEmpty
+                      ? Container(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.red,
+                                        borderRadius:
+                                            BorderRadius.circular(25)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Tidak ada data kehadiran',
                                         style: TextStyle(
-                                          color: Colors.black,
-                                          fontFamily: 'OpenSans',
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                            fontSize: 18,
+                                            fontFamily: 'OpenSans',
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white),
                                       ),
                                     ),
-                                  ],
-                                  rows: [
-                                    for (var i = 0;
-                                        i <
-                                            tampilPesertaKelasResponseModel
-                                                .data.length;
-                                        i++)
-                                      DataRow(cells: [
-                                        DataCell(Text('${i + 1}')),
-                                        DataCell(Text(
-                                            tampilPesertaKelasResponseModel
-                                                    .data[i].npm ??
-                                                '-')),
-                                        DataCell(Text(
-                                            tampilPesertaKelasResponseModel
-                                                    .data[i].namamhs ??
-                                                '-')),
-                                      ]),
-                                  ]),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ));
+                        )
+                      : Scrollbar(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Scrollbar(
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: DataTable(
+                                        onSelectAll: (b) {},
+                                        headingRowColor:
+                                            MaterialStateProperty.all(
+                                                Colors.blue[200]),
+                                        columns: [
+                                          DataColumn(
+                                              label: Text(
+                                            'No',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontFamily: 'OpenSans',
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )),
+                                          DataColumn(
+                                              label: Text(
+                                            'NPM',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontFamily: 'OpenSans',
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          )),
+                                          DataColumn(
+                                            label: Text(
+                                              'Nama Mahasiswa',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontFamily: 'OpenSans',
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                        rows: [
+                                          for (var i = 0;
+                                              i <
+                                                  tampilPesertaKelasListSearch
+                                                      .length;
+                                              i++)
+                                            DataRow(cells: [
+                                              DataCell(Text('${i + 1}')),
+                                              DataCell(Text(
+                                                  tampilPesertaKelasListSearch[
+                                                              i]
+                                                          .npm ??
+                                                      '-')),
+                                              DataCell(Text(
+                                                  tampilPesertaKelasListSearch[
+                                                              i]
+                                                          .namamhs ??
+                                                      '-')),
+                                            ]),
+                                        ]),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+            ],
+          ),
+        ));
   }
 
   // @override

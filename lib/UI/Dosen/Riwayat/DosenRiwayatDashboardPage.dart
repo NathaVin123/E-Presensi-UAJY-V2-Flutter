@@ -29,6 +29,8 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
   RiwayatDosenRequestModel riwayatDosenRequestModel;
 
   RiwayatDosenResponseModel riwayatDosenResponseModel;
+
+  List<Data> riwayatDosenListSearch = List<Data>();
   @override
   void initState() {
     super.initState();
@@ -57,7 +59,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
     });
   }
 
-  void getDataRiwayatDosen() async {
+  getDataRiwayatDosen() async {
     // setState(() {
     riwayatDosenRequestModel.npp = npp;
 
@@ -65,8 +67,11 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
     APIService apiService = new APIService();
     apiService.postRiwayatDosen(riwayatDosenRequestModel).then((value) async {
       riwayatDosenResponseModel = value;
+
+      riwayatDosenListSearch = value.data;
     });
     // });
+    return riwayatDosenListSearch;
   }
 
   // void _getTime() {
@@ -171,6 +176,47 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
       ),
       body: Column(
         children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                    color: Colors.grey[500],
+                    offset: Offset(0.0, 0.0),
+                    blurRadius: 0.75,
+                    spreadRadius: 0.25)
+              ], color: Colors.white, borderRadius: BorderRadius.circular(25)),
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.search),
+                    iconColor: Colors.black,
+                    hintText: 'Cari Mata Kuliah',
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                  ),
+                  style: const TextStyle(
+                      fontFamily: 'OpenSans',
+                      fontSize: 16.0,
+                      color: Colors.black),
+                  onChanged: (text) {
+                    text = text.toLowerCase();
+                    setState(() {
+                      riwayatDosenListSearch =
+                          riwayatDosenResponseModel.data.where((matkul) {
+                        var namamk = matkul.namamk.toLowerCase();
+                        return namamk.contains(text);
+                      }).toList();
+                    });
+                  },
+                ),
+              ),
+            ),
+          ),
           // Center(
           //   child: Column(
           //     children: <Widget>[
@@ -260,7 +306,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
                   : Expanded(
                       child: Scrollbar(
                         child: ListView.builder(
-                            itemCount: riwayatDosenResponseModel.data?.length,
+                            itemCount: riwayatDosenListSearch.length,
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.only(
@@ -284,7 +330,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
                                           child: Padding(
                                             padding: const EdgeInsets.all(4.0),
                                             child: Text(
-                                              '${riwayatDosenResponseModel.data[index].hari1}, ${riwayatDosenResponseModel.data[index].tglmasuk}',
+                                              '${riwayatDosenListSearch[index].hari1}, ${riwayatDosenListSearch[index].tglmasuk}',
                                               style: TextStyle(
                                                 color: Colors.blue[500],
                                                 fontSize: 16,
@@ -309,7 +355,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
                                                               const EdgeInsets
                                                                   .all(4.0),
                                                           child: new Text(
-                                                            '${riwayatDosenResponseModel.data[index].namamk} ${riwayatDosenResponseModel.data[index].kelas}',
+                                                            '${riwayatDosenListSearch[index].namamk} ${riwayatDosenListSearch[index].kelas}',
                                                             style: TextStyle(
                                                                 fontSize: 18,
                                                                 fontFamily:
@@ -330,7 +376,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
                                         Padding(
                                           padding: const EdgeInsets.all(4.0),
                                           child: new Text(
-                                            'Pertemuan ke - ${riwayatDosenResponseModel.data[index].pertemuan}',
+                                            'Pertemuan ke - ${riwayatDosenListSearch[index].pertemuan}',
                                             style: TextStyle(
                                               color: Colors.grey[600],
                                               fontSize: 14,
@@ -347,7 +393,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
                                               padding:
                                                   const EdgeInsets.all(4.0),
                                               child: new Text(
-                                                'Hadir : ${riwayatDosenResponseModel.data[index].hadir ?? '-'}',
+                                                'Hadir : ${riwayatDosenListSearch[index].hadir ?? '-'}',
                                                 style: TextStyle(
                                                   color: Colors.grey[600],
                                                   fontSize: 14,
@@ -360,7 +406,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
                                               padding:
                                                   const EdgeInsets.all(4.0),
                                               child: new Text(
-                                                'Alpa : ${riwayatDosenResponseModel.data[index].tidakhadir ?? '-'}',
+                                                'Alpa : ${riwayatDosenListSearch[index].tidakhadir ?? '-'}',
                                                 style: TextStyle(
                                                   color: Colors.grey[600],
                                                   fontSize: 14,
@@ -373,7 +419,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
                                               padding:
                                                   const EdgeInsets.all(4.0),
                                               child: new Text(
-                                                'Izin : ${riwayatDosenResponseModel.data[index].izin ?? '-'}',
+                                                'Izin : ${riwayatDosenListSearch[index].izin ?? '-'}',
                                                 style: TextStyle(
                                                   color: Colors.grey[600],
                                                   fontSize: 14,
@@ -399,7 +445,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
                                             //       padding:
                                             //           const EdgeInsets.all(4.0),
                                             //       child: Text(
-                                            //         'Ruang : ${riwayatDosenResponseModel.data[index].ruang}',
+                                            //         'Ruang : ${riwayatDosenListSearch[index].ruang}',
                                             //         style: TextStyle(
                                             //             fontFamily: 'OpenSans',
                                             //             fontWeight:
@@ -415,7 +461,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
                                             //       padding:
                                             //           const EdgeInsets.all(4.0),
                                             //       child: Text(
-                                            //         'SKS : ${riwayatDosenResponseModel.data[index].sks}',
+                                            //         'SKS : ${riwayatDosenListSearch[index].sks}',
                                             //         style: TextStyle(
                                             //             fontFamily: 'OpenSans',
                                             //             fontWeight:
@@ -431,7 +477,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
                                             //       padding:
                                             //           const EdgeInsets.all(4.0),
                                             //       child: Text(
-                                            //         'Sesi : ${riwayatDosenResponseModel.data[index].sesi1}',
+                                            //         'Sesi : ${riwayatDosenListSearch[index].sesi1}',
                                             //         style: TextStyle(
                                             //             fontFamily: 'OpenSans',
                                             //             fontWeight:
@@ -448,7 +494,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
                                             //       padding:
                                             //           const EdgeInsets.all(4.0),
                                             //       child: Text(
-                                            //         'Jam Kelas :  ${riwayatDosenResponseModel.data[index].jammasuk} - ${riwayatDosenResponseModel.data[index].jamkeluar}',
+                                            //         'Jam Kelas :  ${riwayatDosenListSearch[index].jammasuk} - ${riwayatDosenListSearch[index].jamkeluar}',
                                             //         style: TextStyle(
                                             //             fontFamily: 'OpenSans',
                                             //             fontWeight:
@@ -462,7 +508,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
                                               padding:
                                                   const EdgeInsets.all(4.0),
                                               child: Text(
-                                                'Keterangan : ${riwayatDosenResponseModel.data[index].keterangan ?? "-"}',
+                                                'Keterangan : ${riwayatDosenListSearch[index].keterangan ?? "-"}',
                                                 style: TextStyle(
                                                     fontFamily: 'OpenSans',
                                                     fontWeight: FontWeight.bold,
@@ -473,7 +519,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
                                               padding:
                                                   const EdgeInsets.all(4.0),
                                               child: Text(
-                                                'Materi : ${riwayatDosenResponseModel.data[index].materi ?? "-"}',
+                                                'Materi : ${riwayatDosenListSearch[index].materi ?? "-"}',
                                                 style: TextStyle(
                                                     fontFamily: 'OpenSans',
                                                     fontWeight: FontWeight.bold,
@@ -484,7 +530,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
                                               padding:
                                                   const EdgeInsets.all(4.0),
                                               child: Text(
-                                                'Jam Masuk : ${riwayatDosenResponseModel.data[index].jammasukdosen ?? "-"}',
+                                                'Jam Masuk : ${riwayatDosenListSearch[index].jammasukdosen ?? "-"}',
                                                 style: TextStyle(
                                                     fontFamily: 'OpenSans',
                                                     fontWeight: FontWeight.bold,
@@ -495,7 +541,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
                                               padding:
                                                   const EdgeInsets.all(4.0),
                                               child: Text(
-                                                'Jam Keluar : ${riwayatDosenResponseModel.data[index].jamkeluardosen ?? "-"}',
+                                                'Jam Keluar : ${riwayatDosenListSearch[index].jamkeluardosen ?? "-"}',
                                                 style: TextStyle(
                                                     fontFamily: 'OpenSans',
                                                     fontWeight: FontWeight.bold,
@@ -626,13 +672,13 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
 
                                               await dataPresensiDosen.setInt(
                                                   'idkelas',
-                                                  riwayatDosenResponseModel
-                                                      .data[index].idkelas);
+                                                  riwayatDosenListSearch[index]
+                                                      .idkelas);
 
                                               await dataPresensiDosen.setInt(
                                                   'pertemuan',
-                                                  riwayatDosenResponseModel
-                                                      .data[index].pertemuan);
+                                                  riwayatDosenListSearch[index]
+                                                      .pertemuan);
 
                                               Get.toNamed(
                                                   '/dosen/dashboard/riwayat/presensi/appbar');

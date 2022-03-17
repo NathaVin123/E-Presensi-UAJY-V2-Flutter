@@ -29,6 +29,8 @@ class _MahasiswaRiwayatDashboardPageState
   RiwayatMahasiswaRequestModel riwayatMahasiswaRequestModel;
 
   RiwayatMahasiswaResponseModel riwayatMahasiswaResponseModel;
+
+  List<Data> riwayatMahasiswaListSearch = List<Data>();
   @override
   void initState() {
     super.initState();
@@ -58,7 +60,7 @@ class _MahasiswaRiwayatDashboardPageState
     });
   }
 
-  void getDataRiwayatMahasiswa() async {
+  getDataRiwayatMahasiswa() async {
     // setState(() {
     riwayatMahasiswaRequestModel.npm = npm;
 
@@ -68,7 +70,11 @@ class _MahasiswaRiwayatDashboardPageState
         .postRiwayatMahasiswa(riwayatMahasiswaRequestModel)
         .then((value) async {
       riwayatMahasiswaResponseModel = value;
+
+      riwayatMahasiswaListSearch = value.data;
     });
+
+    return riwayatMahasiswaListSearch;
     // });
   }
 
@@ -176,6 +182,47 @@ class _MahasiswaRiwayatDashboardPageState
       ),
       body: Column(
         children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                    color: Colors.grey[500],
+                    offset: Offset(0.0, 0.0),
+                    blurRadius: 0.75,
+                    spreadRadius: 0.25)
+              ], color: Colors.white, borderRadius: BorderRadius.circular(25)),
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.search),
+                    iconColor: Colors.black,
+                    hintText: 'Cari Mata Kuliah',
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                  ),
+                  style: const TextStyle(
+                      fontFamily: 'OpenSans',
+                      fontSize: 16.0,
+                      color: Colors.black),
+                  onChanged: (text) {
+                    text = text.toLowerCase();
+                    setState(() {
+                      riwayatMahasiswaListSearch =
+                          riwayatMahasiswaResponseModel.data.where((matkul) {
+                        var namamk = matkul.namamk.toLowerCase();
+                        return namamk.contains(text);
+                      }).toList();
+                    });
+                  },
+                ),
+              ),
+            ),
+          ),
           // Center(
           //   child: Column(
           //     children: <Widget>[
@@ -265,8 +312,7 @@ class _MahasiswaRiwayatDashboardPageState
                   : Expanded(
                       child: Scrollbar(
                         child: ListView.builder(
-                            itemCount:
-                                riwayatMahasiswaResponseModel.data?.length,
+                            itemCount: riwayatMahasiswaListSearch?.length,
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.only(
@@ -280,7 +326,7 @@ class _MahasiswaRiwayatDashboardPageState
                                             blurRadius: 0.75,
                                             spreadRadius: 0.25)
                                       ],
-                                      color: Colors.grey[200],
+                                      color: Colors.white,
                                       borderRadius: BorderRadius.circular(25)),
                                   child: new ListTile(
                                     title: Column(
@@ -290,7 +336,7 @@ class _MahasiswaRiwayatDashboardPageState
                                           child: Padding(
                                             padding: const EdgeInsets.all(4.0),
                                             child: Text(
-                                              '${riwayatMahasiswaResponseModel.data[index].hari1}, ${riwayatMahasiswaResponseModel.data[index].tglmasuk}',
+                                              '${riwayatMahasiswaListSearch[index].hari1}, ${riwayatMahasiswaListSearch[index].tglmasuk}',
                                               style: TextStyle(
                                                 color: Colors.blue[500],
                                                 fontSize: 16,
@@ -315,7 +361,7 @@ class _MahasiswaRiwayatDashboardPageState
                                                               const EdgeInsets
                                                                   .all(4.0),
                                                           child: new Text(
-                                                            '${riwayatMahasiswaResponseModel.data[index].namamk} ${riwayatMahasiswaResponseModel.data[index].kelas}',
+                                                            '${riwayatMahasiswaListSearch[index].namamk} ${riwayatMahasiswaListSearch[index].kelas}',
                                                             style: TextStyle(
                                                                 fontSize: 18,
                                                                 fontFamily:
@@ -334,7 +380,7 @@ class _MahasiswaRiwayatDashboardPageState
                                           ),
                                         ),
                                         new Text(
-                                          'Pertemuan ke - ${riwayatMahasiswaResponseModel.data[index].pertemuan}',
+                                          'Pertemuan ke - ${riwayatMahasiswaListSearch[index].pertemuan}',
                                           style: TextStyle(
                                             color: Colors.grey[600],
                                             fontSize: 14,
@@ -348,7 +394,7 @@ class _MahasiswaRiwayatDashboardPageState
                                           Padding(
                                             padding: const EdgeInsets.all(4.0),
                                             child: new Text(
-                                              // 'Status : ${riwayatMahasiswaResponseModel.data[index].status ?? "-"}',
+                                              // 'Status : ${riwayatMahasiswaListSearch[index].status ?? "-"}',
                                               'Hadir',
                                               style: TextStyle(
                                                 fontSize: 16,
@@ -364,7 +410,7 @@ class _MahasiswaRiwayatDashboardPageState
                                           Padding(
                                             padding: const EdgeInsets.all(4.0),
                                             child: new Text(
-                                              // 'Status : ${riwayatMahasiswaResponseModel.data[index].status ?? "-"}',
+                                              // 'Status : ${riwayatMahasiswaListSearch[index].status ?? "-"}',
                                               'Alpa',
                                               style: TextStyle(
                                                 fontSize: 16,
@@ -380,7 +426,7 @@ class _MahasiswaRiwayatDashboardPageState
                                           Padding(
                                             padding: const EdgeInsets.all(4.0),
                                             child: new Text(
-                                              // 'Status : ${riwayatMahasiswaResponseModel.data[index].status ?? "-"}',
+                                              // 'Status : ${riwayatMahasiswaListSearch[index].status ?? "-"}',
                                               'Izin',
                                               style: TextStyle(
                                                 fontSize: 16,
@@ -394,7 +440,7 @@ class _MahasiswaRiwayatDashboardPageState
                                           Padding(
                                             padding: const EdgeInsets.all(4.0),
                                             child: new Text(
-                                              // 'Status : ${riwayatMahasiswaResponseModel.data[index].status ?? "-"}',
+                                              // 'Status : ${riwayatMahasiswaListSearch[index].status ?? "-"}',
                                               '-',
                                               style: TextStyle(
                                                 fontSize: 16,
@@ -424,7 +470,7 @@ class _MahasiswaRiwayatDashboardPageState
                                             //               const EdgeInsets.all(
                                             //                   4.0),
                                             //           child: Text(
-                                            //             'Dosen Pengampu : ${riwayatMahasiswaResponseModel.data[index].namadosen1}',
+                                            //             'Dosen Pengampu : ${riwayatMahasiswaListSearch[index].namadosen1}',
                                             //             style: TextStyle(
                                             //                 fontFamily:
                                             //                     'OpenSans',
@@ -441,7 +487,7 @@ class _MahasiswaRiwayatDashboardPageState
                                             //   padding:
                                             //       const EdgeInsets.all(4.0),
                                             //   child: Text(
-                                            //     'Ruang ${riwayatMahasiswaResponseModel.data[index].ruang}',
+                                            //     'Ruang ${riwayatMahasiswaListSearch[index].ruang}',
                                             //     style: TextStyle(
                                             //         fontFamily: 'OpenSans',
                                             //         fontWeight: FontWeight.bold,
@@ -454,7 +500,7 @@ class _MahasiswaRiwayatDashboardPageState
                                             //       padding:
                                             //           const EdgeInsets.all(4.0),
                                             //       child: Text(
-                                            //         'SKS : ${riwayatMahasiswaResponseModel.data[index].sks}',
+                                            //         'SKS : ${riwayatMahasiswaListSearch[index].sks}',
                                             //         style: TextStyle(
                                             //             fontFamily: 'OpenSans',
                                             //             fontWeight:
@@ -470,7 +516,7 @@ class _MahasiswaRiwayatDashboardPageState
                                             //       padding:
                                             //           const EdgeInsets.all(4.0),
                                             //       child: Text(
-                                            //         'Sesi : ${riwayatMahasiswaResponseModel.data[index].sesi1}',
+                                            //         'Sesi : ${riwayatMahasiswaListSearch[index].sesi1}',
                                             //         style: TextStyle(
                                             //             fontFamily: 'OpenSans',
                                             //             fontWeight:
@@ -484,7 +530,7 @@ class _MahasiswaRiwayatDashboardPageState
                                               padding:
                                                   const EdgeInsets.all(4.0),
                                               child: Text(
-                                                'Jam Masuk : ${riwayatMahasiswaResponseModel.data[index].jammasukdosen ?? "-"}',
+                                                'Jam Masuk : ${riwayatMahasiswaListSearch[index].jammasukdosen ?? "-"}',
                                                 style: TextStyle(
                                                     fontFamily: 'OpenSans',
                                                     fontWeight: FontWeight.bold,
@@ -495,7 +541,7 @@ class _MahasiswaRiwayatDashboardPageState
                                               padding:
                                                   const EdgeInsets.all(4.0),
                                               child: Text(
-                                                'Jam Keluar : ${riwayatMahasiswaResponseModel.data[index].jamkeluardosen ?? "-"}',
+                                                'Jam Keluar : ${riwayatMahasiswaListSearch[index].jamkeluardosen ?? "-"}',
                                                 style: TextStyle(
                                                     fontFamily: 'OpenSans',
                                                     fontWeight: FontWeight.bold,

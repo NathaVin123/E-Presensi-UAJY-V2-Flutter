@@ -30,6 +30,8 @@ class _MahasiswaJadwalDashboardPageState
   JadwalMahasiswaRequestModel jadwalMahasiswaRequestModel;
 
   JadwalMahasiswaResponseModel jadwalMahasiswaResponseModel;
+
+  List<Data> jadwalMahasiswaListSearch = List<Data>();
   @override
   void initState() {
     super.initState();
@@ -59,7 +61,7 @@ class _MahasiswaJadwalDashboardPageState
     });
   }
 
-  void getDataJadwalMahasiswa() async {
+  getDataJadwalMahasiswa() async {
     // setState(() {
     jadwalMahasiswaRequestModel.npm = npm;
 
@@ -69,8 +71,11 @@ class _MahasiswaJadwalDashboardPageState
         .postJadwalMahasiswa(jadwalMahasiswaRequestModel)
         .then((value) async {
       jadwalMahasiswaResponseModel = value;
+
+      jadwalMahasiswaListSearch = value.data;
     });
     // });
+    return jadwalMahasiswaListSearch;
   }
 
   // void _getTime() {
@@ -176,6 +181,47 @@ class _MahasiswaJadwalDashboardPageState
       ),
       body: Column(
         children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                    color: Colors.grey[500],
+                    offset: Offset(0.0, 0.0),
+                    blurRadius: 0.75,
+                    spreadRadius: 0.25)
+              ], color: Colors.white, borderRadius: BorderRadius.circular(25)),
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    icon: Icon(Icons.search),
+                    iconColor: Colors.black,
+                    hintText: 'Cari Mata Kuliah',
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                  ),
+                  style: const TextStyle(
+                      fontFamily: 'OpenSans',
+                      fontSize: 16.0,
+                      color: Colors.black),
+                  onChanged: (text) {
+                    text = text.toLowerCase();
+                    setState(() {
+                      jadwalMahasiswaListSearch =
+                          jadwalMahasiswaResponseModel.data.where((matkul) {
+                        var namamk = matkul.namamk.toLowerCase();
+                        return namamk.contains(text);
+                      }).toList();
+                    });
+                  },
+                ),
+              ),
+            ),
+          ),
           // Center(
           //   child: Column(
           //     children: <Widget>[
@@ -290,8 +336,7 @@ class _MahasiswaJadwalDashboardPageState
                   : Expanded(
                       child: Scrollbar(
                         child: ListView.builder(
-                            itemCount:
-                                jadwalMahasiswaResponseModel.data?.length,
+                            itemCount: jadwalMahasiswaListSearch?.length,
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.only(
@@ -315,7 +360,7 @@ class _MahasiswaJadwalDashboardPageState
                                           child: Padding(
                                             padding: const EdgeInsets.all(4.0),
                                             child: Text(
-                                              '${jadwalMahasiswaResponseModel.data[index].hari1}, ${jadwalMahasiswaResponseModel.data[index].tglmasuk}' ??
+                                              '${jadwalMahasiswaListSearch[index].hari1}, ${jadwalMahasiswaListSearch[index].tglmasuk}' ??
                                                   '-',
                                               style: TextStyle(
                                                 color: Colors.blue[500],
@@ -343,7 +388,7 @@ class _MahasiswaJadwalDashboardPageState
                                                                 const EdgeInsets
                                                                     .all(4.0),
                                                             child: new Text(
-                                                              '${jadwalMahasiswaResponseModel.data[index].namamk} ${jadwalMahasiswaResponseModel.data[index].kelas}',
+                                                              '${jadwalMahasiswaListSearch[index].namamk} ${jadwalMahasiswaListSearch[index].kelas}',
                                                               style: TextStyle(
                                                                   fontSize: 18,
                                                                   fontFamily:
@@ -363,7 +408,7 @@ class _MahasiswaJadwalDashboardPageState
                                           ),
                                         ),
                                         new Text(
-                                          'Pertemuan ke - ${jadwalMahasiswaResponseModel.data[index].pertemuan}',
+                                          'Pertemuan ke - ${jadwalMahasiswaListSearch[index].pertemuan}',
                                           style: TextStyle(
                                             color: Colors.grey[600],
                                             fontSize: 14,
@@ -423,7 +468,7 @@ class _MahasiswaJadwalDashboardPageState
                                                           const EdgeInsets.all(
                                                               4.0),
                                                       child: Text(
-                                                        '${jadwalMahasiswaResponseModel.data[index].namadosen1}',
+                                                        '${jadwalMahasiswaListSearch[index].namadosen1}',
                                                         style: TextStyle(
                                                             fontFamily:
                                                                 'OpenSans',
@@ -448,7 +493,7 @@ class _MahasiswaJadwalDashboardPageState
                                                         const EdgeInsets.all(
                                                             4.0),
                                                     child: Text(
-                                                      'Sesi ${jadwalMahasiswaResponseModel.data[index].sesi1}',
+                                                      'Sesi ${jadwalMahasiswaListSearch[index].sesi1}',
                                                       style: TextStyle(
                                                         color: Colors.black,
                                                         fontSize: 14,
@@ -463,7 +508,7 @@ class _MahasiswaJadwalDashboardPageState
                                                   padding:
                                                       const EdgeInsets.all(4.0),
                                                   child: Text(
-                                                    'Ruang ${jadwalMahasiswaResponseModel.data[index].ruang}',
+                                                    'Ruang ${jadwalMahasiswaListSearch[index].ruang}',
                                                     style: TextStyle(
                                                         fontFamily: 'OpenSans',
                                                         fontWeight:
@@ -475,7 +520,7 @@ class _MahasiswaJadwalDashboardPageState
                                                   padding:
                                                       const EdgeInsets.all(4.0),
                                                   child: Text(
-                                                    '${jadwalMahasiswaResponseModel.data[index].sks} SKS',
+                                                    '${jadwalMahasiswaListSearch[index].sks} SKS',
                                                     style: TextStyle(
                                                         fontFamily: 'OpenSans',
                                                         fontWeight:
@@ -489,7 +534,7 @@ class _MahasiswaJadwalDashboardPageState
                                               padding:
                                                   const EdgeInsets.all(4.0),
                                               child: Text(
-                                                '${jadwalMahasiswaResponseModel.data[index].jammasuk} - ${jadwalMahasiswaResponseModel.data[index].jamkeluar}',
+                                                '${jadwalMahasiswaListSearch[index].jammasuk} - ${jadwalMahasiswaListSearch[index].jamkeluar}',
                                                 style: TextStyle(
                                                     fontFamily: 'OpenSans',
                                                     fontWeight: FontWeight.bold,
@@ -540,8 +585,9 @@ class _MahasiswaJadwalDashboardPageState
 
                                               await dataPresensiDosen.setInt(
                                                   'idkelas',
-                                                  jadwalMahasiswaResponseModel
-                                                      .data[index].idkelas);
+                                                  jadwalMahasiswaListSearch[
+                                                          index]
+                                                      .idkelas);
 
                                               Get.toNamed(
                                                   '/mahasiswa/dashboard/presensi/detail/tampilpeserta');
