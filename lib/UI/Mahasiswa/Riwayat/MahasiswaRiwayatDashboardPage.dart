@@ -30,6 +30,7 @@ class _MahasiswaRiwayatDashboardPageState
 
   RiwayatMahasiswaResponseModel riwayatMahasiswaResponseModel;
 
+  // ignore: deprecated_member_use
   List<Data> riwayatMahasiswaListSearch = List<Data>();
   @override
   void initState() {

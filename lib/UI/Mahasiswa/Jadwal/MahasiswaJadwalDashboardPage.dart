@@ -31,6 +31,7 @@ class _MahasiswaJadwalDashboardPageState
 
   JadwalMahasiswaResponseModel jadwalMahasiswaResponseModel;
 
+  // ignore: deprecated_member_use
   List<Data> jadwalMahasiswaListSearch = List<Data>();
   @override
   void initState() {

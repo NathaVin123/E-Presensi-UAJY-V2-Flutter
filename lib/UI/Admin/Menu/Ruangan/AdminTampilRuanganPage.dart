@@ -16,6 +16,7 @@ class AdminTampilRuanganPage extends StatefulWidget {
 class _AdminTampilRuanganPageState extends State<AdminTampilRuanganPage> {
   ListDetailRuanganResponseModel listDetailRuanganResponseModel;
 
+  // ignore: deprecated_member_use
   List<Data> ruanganListSearch = List<Data>();
 
   @override

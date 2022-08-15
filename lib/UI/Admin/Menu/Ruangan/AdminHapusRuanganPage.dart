@@ -21,6 +21,7 @@ class _AdminHapusRuanganPageState extends State<AdminHapusRuanganPage>
 
   LepasRuangBeaconRequestModel lepasRuangBeaconRequestModel;
 
+  // ignore: deprecated_member_use
   List<Data> ruanganListSearch = List<Data>();
 
   bool isApiCallProcess = false;

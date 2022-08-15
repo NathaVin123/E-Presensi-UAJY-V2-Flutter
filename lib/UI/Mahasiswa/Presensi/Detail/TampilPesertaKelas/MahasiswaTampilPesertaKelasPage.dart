@@ -1,8 +1,6 @@
 import 'dart:async';
 
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_initicon/flutter_initicon.dart';
 import 'package:presensiblebeacon/API/APIService.dart';
 import 'package:presensiblebeacon/MODEL/Presensi/TampilPesertaKelasModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,6 +17,7 @@ class _MahasiswaTampilPesertaKelasPageState
   TampilPesertaKelasRequestModel tampilPesertaKelasRequestModel;
   TampilPesertaKelasResponseModel tampilPesertaKelasResponseModel;
 
+  // ignore: deprecated_member_use
   List<Data> tampilPesertaKelasListSearch = List<Data>();
 
   @override

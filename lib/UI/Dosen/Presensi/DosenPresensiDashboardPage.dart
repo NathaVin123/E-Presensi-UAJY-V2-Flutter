@@ -22,8 +22,10 @@ class DosenPresensiDashboardPage extends StatefulWidget {
 
 class _DosenPresensiDashboardPageState extends State<DosenPresensiDashboardPage>
     with WidgetsBindingObserver {
+  // ignore: close_sinks
   final StreamController<BluetoothState> streamController = StreamController();
 
+  // ignore: deprecated_member_use
   List<Data> matakuliahListSearch = List<Data>();
 
   bool authorizationStatusOk = false;

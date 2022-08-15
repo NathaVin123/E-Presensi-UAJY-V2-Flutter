@@ -17,6 +17,7 @@ class AdminRuanganPage extends StatefulWidget {
 class _AdminRuanganPageState extends State<AdminRuanganPage> {
   ListRuanganResponseModel listRuanganResponseModel;
 
+  // ignore: deprecated_member_use
   List<Data> ruanganListSearch = List<Data>();
 
   @override

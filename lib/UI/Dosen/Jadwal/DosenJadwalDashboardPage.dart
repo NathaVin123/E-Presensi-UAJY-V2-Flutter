@@ -30,6 +30,7 @@ class _DosenJadwalDashboardPageState extends State<DosenJadwalDashboardPage> {
 
   JadwalDosenResponseModel jadwalDosenResponseModel;
 
+  // ignore: deprecated_member_use
   List<Data> jadwalDosenListSearch = List<Data>();
   @override
   void initState() {

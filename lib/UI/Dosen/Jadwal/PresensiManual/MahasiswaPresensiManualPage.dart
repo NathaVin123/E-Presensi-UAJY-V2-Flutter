@@ -23,6 +23,7 @@ class _MahasiswaPresensiManualPageState
   TampilPesertaKelasRequestModel tampilPesertaKelasRequestModel;
   TampilPesertaKelasResponseModel tampilPesertaKelasResponseModel;
 
+  // ignore: deprecated_member_use
   List<Data> tampilPesertaKelasListSearch = List<Data>();
 
   @override

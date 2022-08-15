@@ -17,6 +17,7 @@ class AdminUbahBeacon extends StatefulWidget {
 class _AdminUbahBeaconState extends State<AdminUbahBeacon> {
   ListBeaconResponseModel listBeaconResponseModel;
 
+  // ignore: deprecated_member_use
   List<Data> beaconListSearch = List<Data>();
 
   @override

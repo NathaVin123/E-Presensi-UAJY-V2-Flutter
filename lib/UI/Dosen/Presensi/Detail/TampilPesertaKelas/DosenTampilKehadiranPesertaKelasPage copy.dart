@@ -25,6 +25,7 @@ class _DosenTampilKehadiranPesertaKelasPageTesState
   TampilKehadiranPesertaKelasResponseModel
       tampilKehadiranPesertaKelasResponseModel;
 
+  // ignore: deprecated_member_use
   List<Data> tampilKehadiranPesertaKelasListSearch = List<Data>();
 
   @override

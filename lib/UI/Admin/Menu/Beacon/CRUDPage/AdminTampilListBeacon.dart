@@ -16,6 +16,7 @@ class AdminTampilListBeacon extends StatefulWidget {
 class _AdminTampilListBeaconState extends State<AdminTampilListBeacon> {
   ListBeaconResponseModel listBeaconResponseModel;
 
+  // ignore: deprecated_member_use
   List<Data> beaconListSearch = List<Data>();
 
   bool condition = false;

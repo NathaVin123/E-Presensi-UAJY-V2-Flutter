@@ -8,11 +8,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:presensiblebeacon/API/APIService.dart';
 import 'package:presensiblebeacon/MODEL/Presensi/KSI/Dosen/PresensiDosenModel.dart';
-import 'package:presensiblebeacon/MODEL/Presensi/MahasiswaManualModel.dart';
 import 'package:presensiblebeacon/MODEL/Presensi/TampilPesertaKelasModel.dart';
 import 'package:presensiblebeacon/UTILS/ProgressHUD.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sk_alert_dialog/sk_alert_dialog.dart';
 
 class DosenPresensiManualPage extends StatefulWidget {
   @override

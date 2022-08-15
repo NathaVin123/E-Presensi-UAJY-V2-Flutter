@@ -30,6 +30,7 @@ class _DosenRiwayatDashboardPageState extends State<DosenRiwayatDashboardPage> {
 
   RiwayatDosenResponseModel riwayatDosenResponseModel;
 
+  // ignore: deprecated_member_use
   List<Data> riwayatDosenListSearch = List<Data>();
   @override
   void initState() {
