@@ -25,8 +25,8 @@ class _MahasiswaPresensiDashboardPageState
   bool locationServiceEnabled = false;
   bool bluetoothEnabled = false;
 
-  String _timeString;
-  String _dateString;
+  // String _timeString;
+  // String _dateString;
 
   String kelas = "";
   String jam = "";
